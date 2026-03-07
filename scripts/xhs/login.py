@@ -28,6 +28,8 @@ from .selectors import (
     PHONE_INPUT,
     PHONE_LOGIN_SUBMIT,
     QRCODE_IMG,
+    USER_NICKNAME,
+    USER_PROFILE_NAV_LINK,
 )
 from .urls import EXPLORE_URL
 
@@ -48,15 +50,32 @@ def _wait_for_auth_ui(page: Page, timeout: float = 8.0) -> None:
 
 
 def get_current_user_nickname(page: Page) -> str:
-    """获取当前登录用户的昵称，失败时返回空字符串（best-effort）。"""
+    """获取当前登录用户的真实昵称，失败时返回空字符串（best-effort）。
+
+    流程：首页导航栏取个人主页 href → 导航过去 → 读 .user-name 文字。
+    """
     try:
         page.navigate(EXPLORE_URL)
         page.wait_for_load()
         _wait_for_auth_ui(page)
         if not page.has_element(LOGIN_STATUS):
             return ""
+
+        # 从导航栏"我"的链接取个人主页 URL（含 /user/profile/<user_id>）
+        profile_href = page.evaluate(
+            f"document.querySelector({json.dumps(USER_PROFILE_NAV_LINK)})?.getAttribute('href') || ''"
+        )
+        if not profile_href:
+            return ""
+
+        # 导航到个人主页读取真实昵称
+        profile_url = f"https://www.xiaohongshu.com{profile_href}"
+        page.navigate(profile_url)
+        page.wait_for_load()
+        page.wait_dom_stable()
+
         nickname = page.evaluate(
-            f"document.querySelector({json.dumps(LOGIN_STATUS)})?.innerText?.trim() || ''"
+            f"document.querySelector({json.dumps(USER_NICKNAME)})?.innerText?.trim() || ''"
         )
         return nickname or ""
     except Exception:

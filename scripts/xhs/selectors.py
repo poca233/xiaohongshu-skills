@@ -91,3 +91,7 @@ LOGOUT_MENU_ITEM = 'div.menu-item[data-name="退出登录"]'
 
 # ========== 用户主页 ==========
 SIDEBAR_PROFILE = "div.main-container li.user.side-bar-component a.link-wrapper span.channel"
+# 登录后导航栏"我"的链接（href 含 /user/profile/<user_id>）
+USER_PROFILE_NAV_LINK = ".main-container .user .link-wrapper a.link-wrapper"
+# 个人主页真实昵称
+USER_NICKNAME = ".user-name"
