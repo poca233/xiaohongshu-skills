@@ -231,19 +231,15 @@ def cmd_login(args: argparse.Namespace) -> None:
 
     browser, page = _connect(args)
     try:
-        src, already = fetch_qrcode(page)
+        png_bytes, already = fetch_qrcode(page)
         if already:
             _output({"logged_in": True, "message": "已登录"})
             return
 
-        qrcode_path, qrcode_data_url = save_qrcode_to_file(src)
+        qrcode_path = save_qrcode_to_file(png_bytes)
         print(
             json.dumps(
-                {
-                    "qrcode_path": qrcode_path,
-                    "qrcode_data_url": qrcode_data_url,
-                    "message": "请扫码登录，二维码已保存到文件",
-                },
+                {"qrcode_path": qrcode_path, "message": "请扫码登录，二维码已保存到文件"},
                 ensure_ascii=False,
             )
         )
@@ -313,14 +309,14 @@ def cmd_get_qrcode(args: argparse.Namespace) -> None:
 
     browser, page = _connect(args)
 
-    src, already = fetch_qrcode(page)
+    png_bytes, already = fetch_qrcode(page)
     if already:
         browser.close_page(page)
         browser.close()
         _output({"logged_in": True, "message": "已登录"})
         return
 
-    qrcode_path, qrcode_data_url = save_qrcode_to_file(src)
+    qrcode_path = save_qrcode_to_file(png_bytes)
 
     # 记录 tab，供 wait-login 精确reconnect
     _save_login_tab(page.target_id)
@@ -329,7 +325,6 @@ def cmd_get_qrcode(args: argparse.Namespace) -> None:
     browser.close()
     _output({
         "qrcode_path": qrcode_path,
-        "qrcode_data_url": qrcode_data_url,
         "message": "二维码已生成，请扫码登录。扫码后运行 check-login 确认登录状态。",
     })
 

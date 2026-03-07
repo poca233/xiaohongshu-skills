@@ -2,7 +2,7 @@
 
 # ========== 登录 ==========
 LOGIN_STATUS = ".main-container .user .link-wrapper .channel"
-QRCODE_IMG = ".login-container .qrcode-img"
+QRCODE_IMG = ".qrcode-img"
 
 # ========== 手机号登录 ==========
 LOGIN_CONTAINER = ".login-container"
