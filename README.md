@@ -1,5 +1,9 @@
 # xiaohongshu-skills
+Fork文件autoclaw/ccxiaohongshu-skills
+已修复报错定位：
+div.filter-panel div.filters:nth-child(1) div.tags:nth-child(3)
 
+# 原文档介绍
 小红书自动化 Skills，直接使用你已登录的浏览器和真实账号，以普通用户的方式操作小红书。
 
 支持 [OpenClaw](https://github.com/anthropics/openclaw) 及所有兼容 `SKILL.md` 格式的 AI Agent 平台（如 Claude Code）。
